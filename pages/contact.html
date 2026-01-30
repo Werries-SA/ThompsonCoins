@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,10 +8,12 @@
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
+
 <body>
     <div id="header-placeholder"></div>
 
-    <div class="banner" style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../images/banners/contact-banner.jpg');">
+    <div class="banner"
+        style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../images/banners/contact-banner.jpg');">
         <div class="banner-content">
             <h2>Contact Thompson Coins</h2>
             <p>We'd love to hear from you</p>
@@ -21,8 +24,9 @@
         <div class="contact-container">
             <div class="contact-info">
                 <h2>Get In Touch</h2>
-                <p>Whether you're interested in a specific coin, have questions about our collection, or need expert appraisal services, we're here to assist you.</p>
-                
+                <p>Whether you're interested in a specific coin, have questions about our collection, or need expert
+                    appraisal services, we're here to assist you.</p>
+
                 <div class="contact-detail">
                     <div class="contact-icon">
                         <i class="fas fa-map-marker-alt"></i>
@@ -32,27 +36,27 @@
                         <p>123 Numismatic Lane<br>Johannesburg, South Africa</p>
                     </div>
                 </div>
-                
+
                 <div class="contact-detail">
                     <div class="contact-icon">
                         <i class="fas fa-phone"></i>
                     </div>
                     <div>
                         <h3>Phone</h3>
-                        <p>(123) 456-7890</p>
+                        <p>+27 71 342 3228</p>
                     </div>
                 </div>
-                
+
                 <div class="contact-detail">
                     <div class="contact-icon">
                         <i class="fas fa-envelope"></i>
                     </div>
                     <div>
                         <h3>Email</h3>
-                        <p>info@thompsoncoins.com</p>
+                        <p>at4179264@gmail.com</p>
                     </div>
                 </div>
-                
+
                 <div class="contact-detail">
                     <div class="contact-icon">
                         <i class="fas fa-clock"></i>
@@ -66,10 +70,14 @@
                 <div class="contact-social" style="margin-top: 30px;">
                     <h3>Follow Us</h3>
                     <div style="display: flex; gap: 15px; margin-top: 10px;">
-                        <a href="#" style="font-size: 24px; color: var(--primary-color);"><i class="fab fa-facebook"></i></a>
-                        <a href="#" style="font-size: 24px; color: var(--primary-color);"><i class="fab fa-instagram"></i></a>
-                        <a href="#" style="font-size: 24px; color: var(--primary-color);"><i class="fab fa-twitter"></i></a>
-                        <a href="#" style="font-size: 24px; color: var(--primary-color);"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" style="font-size: 24px; color: var(--primary-color);"><i
+                                class="fab fa-facebook"></i></a>
+                        <a href="#" style="font-size: 24px; color: var(--primary-color);"><i
+                                class="fab fa-instagram"></i></a>
+                        <a href="#" style="font-size: 24px; color: var(--primary-color);"><i
+                                class="fab fa-twitter"></i></a>
+                        <a href="#" style="font-size: 24px; color: var(--primary-color);"><i
+                                class="fab fa-linkedin"></i></a>
                     </div>
                 </div>
             </div>
@@ -81,27 +89,27 @@
                         <label for="name">Your Name</label>
                         <input type="text" id="name" name="name" required>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="email">Your Email</label>
                         <input type="email" id="email" name="email" required>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="phone">Your Phone</label>
                         <input type="tel" id="phone" name="phone">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="subject">Subject</label>
                         <input type="text" id="subject" name="subject" required>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="message">Your Message</label>
                         <textarea id="message" name="message" required></textarea>
                     </div>
-                    
+
                     <button type="submit" class="submit-btn">Send Message</button>
                 </form>
             </div>
@@ -113,39 +121,39 @@
     <script src="../js/components.js"></script>
     <script>
         // Simple form submission handler
-        document.getElementById('contactForm').addEventListener('submit', function(e) {
+        document.getElementById('contactForm').addEventListener('submit', function (e) {
             e.preventDefault();
-            
+
             // Here you would normally send the form data to a server
             // For demo purposes, we'll just show an alert
             alert('Thank you for your message! We will get back to you soon.');
-            
+
             // Reset the form
             this.reset();
         });
-        
+
         // Admin keyboard shortcut (Ctrl+Alt+Shift+A+D+M+I+N)
         const adminKeySequence = ['a', 'd', 'm', 'i', 'n'];
         let currentSequence = [];
         let ctrlPressed = false;
         let altPressed = false;
         let shiftPressed = false;
-        
-        document.addEventListener('keydown', function(e) {
+
+        document.addEventListener('keydown', function (e) {
             // Track modifier keys
             if (e.key === 'Control') ctrlPressed = true;
             if (e.key === 'Alt') altPressed = true;
             if (e.key === 'Shift') shiftPressed = true;
-            
+
             // Check if all modifier keys are pressed
             if (ctrlPressed && altPressed && shiftPressed) {
                 // Convert key to lowercase for case-insensitive matching
                 const key = e.key.toLowerCase();
-                
+
                 // Check if the key is part of the sequence
                 if (adminKeySequence.includes(key)) {
                     currentSequence.push(key);
-                    
+
                     // Check if the sequence is correct so far
                     for (let i = 0; i < currentSequence.length; i++) {
                         if (currentSequence[i] !== adminKeySequence[i]) {
@@ -154,13 +162,13 @@
                             break;
                         }
                     }
-                    
+
                     // Check if the complete sequence has been entered
                     if (currentSequence.length === adminKeySequence.length) {
                         // Set authorization flag in session storage
                         sessionStorage.setItem('adminAuthorized', 'true');
                         sessionStorage.setItem('adminAuthTimestamp', Date.now().toString());
-                        
+
                         // Redirect to uploader page
                         window.location.href = 'uploader.html';
                         currentSequence = []; // Reset sequence
@@ -171,13 +179,13 @@
                 }
             }
         });
-        
-        document.addEventListener('keyup', function(e) {
+
+        document.addEventListener('keyup', function (e) {
             // Reset modifier key states
             if (e.key === 'Control') ctrlPressed = false;
             if (e.key === 'Alt') altPressed = false;
             if (e.key === 'Shift') shiftPressed = false;
-            
+
             // Reset sequence if any modifier key is released
             if (e.key === 'Control' || e.key === 'Alt' || e.key === 'Shift') {
                 currentSequence = [];
@@ -185,4 +193,5 @@
         });
     </script>
 </body>
-</html> 
+
+</html>
