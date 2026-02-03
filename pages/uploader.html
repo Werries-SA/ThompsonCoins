@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="referrer" content="no-referrer">
-    <title>Thompson Coins & Stones - Upload Coin or Stone</title>
+    <title>Thompson Coins and Stones - Upload Coins</title>
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -189,8 +190,13 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
 
         /* Mode selection styles */
@@ -291,8 +297,13 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         /* Back button styles */
@@ -339,7 +350,7 @@
             display: flex;
             align-items: center;
         }
-        
+
         /* Unauthorized access styles */
         .unauthorized-container {
             max-width: 500px;
@@ -350,16 +361,16 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
-        
+
         .unauthorized-container h2 {
             color: #d9534f;
             margin-bottom: 1rem;
         }
-        
+
         .unauthorized-container p {
             margin-bottom: 1.5rem;
         }
-        
+
         .home-btn {
             background-color: var(--primary-color);
             color: white;
@@ -372,16 +383,18 @@
             display: inline-block;
             transition: background-color 0.3s ease;
         }
-        
+
         .home-btn:hover {
             background-color: var(--secondary-color);
         }
     </style>
 </head>
+
 <body>
     <div id="header-placeholder"></div>
 
-    <div class="banner" style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../images/banners/home-banner.jpg');">
+    <div class="banner"
+        style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../images/banners/home-banner.jpg');">
         <div class="banner-content">
             <h2>Admin Area</h2>
             <p>Restricted access</p>
@@ -396,7 +409,7 @@
             <p>Please use the proper authentication method to access the admin area.</p>
             <a href="../index.html" class="home-btn">Return to Homepage</a>
         </div>
-        
+
         <div id="admin-login" class="login-container">
             <h2>Administrator Access Required</h2>
             <p>Please enter the admin password to continue.</p>
@@ -412,7 +425,8 @@
             <p>What would you like to do?</p>
             <div class="mode-buttons">
                 <button id="add-mode-btn" class="submit-btn">Add New Coin</button>
-                <button id="edit-mode-btn" class="submit-btn" style="background-color: #f0ad4e; margin-top: 1rem;">Edit & Delete Coins</button>
+                <button id="edit-mode-btn" class="submit-btn" style="background-color: #f0ad4e; margin-top: 1rem;">Edit
+                    & Delete Coins</button>
             </div>
         </div>
 
@@ -421,19 +435,19 @@
                 <button id="add-back-btn" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Selection</button>
             </div>
             <h2 class="form-title">Upload New Coin</h2>
-            
+
             <form id="coinUploadForm">
                 <div class="form-group">
                     <label for="coinName">Coin Name*</label>
                     <input type="text" id="coinName" required>
                 </div>
-                
+
                 <div class="form-row">
                     <div class="form-group">
                         <label for="coinPrice">Price (R)*</label>
                         <input type="number" id="coinPrice" required step="0.01">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="coinMaterial">Material*</label>
                         <input type="text" id="coinMaterial" required>
@@ -451,7 +465,7 @@
                             <option value="Modern">Modern</option>
                         </select>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="coinRegion">Region*</label>
                         <select id="coinRegion" required>
@@ -469,23 +483,23 @@
                         <label for="coinDiameter">Diameter (mm)*</label>
                         <input type="number" id="coinDiameter" required step="0.001">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="coinWeight">Weight (g)*</label>
                         <input type="number" id="coinWeight" required step="0.001">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="coinDate">Date/Period*</label>
                         <input type="text" id="coinDate" required>
                     </div>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="coinDescription">Description*</label>
                     <textarea id="coinDescription" required></textarea>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="coinImageUrl">Coin Image URL*</label>
                     <input type="url" id="coinImageUrl" required placeholder="https://example.com/image.jpg">
@@ -493,10 +507,10 @@
                         <!-- Image preview will be shown here -->
                     </div>
                 </div>
-                
+
                 <button type="submit" class="submit-btn">Upload Coin</button>
             </form>
-            
+
             <div id="statusMessage" class="status-message" style="display: none;"></div>
         </div>
 
@@ -507,7 +521,7 @@
             </div>
             <h2 class="form-title">Edit & Delete Coins</h2>
             <p style="text-align: center; margin-bottom: 2rem;">Select a coin to edit or delete from the database.</p>
-            
+
             <div class="coins-list-container">
                 <div id="coinsListForDeletion" class="coins-list">
                     <!-- Coins will be loaded here -->
@@ -516,30 +530,31 @@
                     </div>
                 </div>
             </div>
-            
+
             <div id="deleteStatusMessage" class="status-message" style="display: none;"></div>
         </div>
 
         <!-- Edit coin form container -->
         <div id="edit-content" class="uploader-container" style="display: none;">
             <div class="back-button-container">
-                <button id="edit-form-back-btn" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Coins List</button>
+                <button id="edit-form-back-btn" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Coins
+                    List</button>
             </div>
             <h2 class="form-title">Edit Coin</h2>
-            
+
             <form id="coinEditForm">
                 <input type="hidden" id="editCoinId">
                 <div class="form-group">
                     <label for="editCoinName">Coin Name*</label>
                     <input type="text" id="editCoinName" required>
                 </div>
-                
+
                 <div class="form-row">
                     <div class="form-group">
                         <label for="editCoinPrice">Price (R)*</label>
                         <input type="number" id="editCoinPrice" required step="0.01">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="editCoinMaterial">Material*</label>
                         <input type="text" id="editCoinMaterial" required>
@@ -557,7 +572,7 @@
                             <option value="Modern">Modern</option>
                         </select>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="editCoinRegion">Region*</label>
                         <select id="editCoinRegion" required>
@@ -575,33 +590,33 @@
                         <label for="editCoinDiameter">Diameter (mm)*</label>
                         <input type="number" id="editCoinDiameter" required step="0.001">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="editCoinWeight">Weight (g)*</label>
                         <input type="number" id="editCoinWeight" required step="0.001">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="editCoinDate">Date/Year</label>
                         <input type="text" id="editCoinDate">
                     </div>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="editCoinDescription">Description*</label>
                     <textarea id="editCoinDescription" required></textarea>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="editCoinImageUrl">Image URL*</label>
                     <input type="url" id="editCoinImageUrl" required>
                 </div>
-                
+
                 <div id="editImagePreview" class="image-preview"></div>
-                
+
                 <button type="submit" class="submit-btn">Update Coin</button>
             </form>
-            
+
             <div id="editStatusMessage" class="status-message" style="display: none;"></div>
         </div>
     </main>
@@ -623,25 +638,25 @@
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-analytics.js";
         import { getFirestore } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
         import { getStorage, ref } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-storage.js";
-        
+
         // Your web app's Firebase configuration
         const firebaseConfig = {
-          apiKey: "AIzaSyBev5rA4KOvicOza3tZ3Wa4N2pS_MV4tdo",
-          authDomain: "thompsoncoins-4c541.firebaseapp.com",
-          projectId: "thompsoncoins-4c541",
-          storageBucket: "thompsoncoins-4c541.firebasestorage.app",
-          messagingSenderId: "436932824345",
-          appId: "1:436932824345:web:0444d5d9a519d6f6834988",
-          measurementId: "G-1GDYCH2ZS9"
+            apiKey: "AIzaSyBev5rA4KOvicOza3tZ3Wa4N2pS_MV4tdo",
+            authDomain: "thompsoncoins-4c541.firebaseapp.com",
+            projectId: "thompsoncoins-4c541",
+            storageBucket: "thompsoncoins-4c541.firebasestorage.app",
+            messagingSenderId: "436932824345",
+            appId: "1:436932824345:web:0444d5d9a519d6f6834988",
+            measurementId: "G-1GDYCH2ZS9"
         };
-        
+
         try {
             // Initialize Firebase
             console.log('Initializing Firebase in uploader.html...');
             const app = initializeApp(firebaseConfig);
             const analytics = getAnalytics(app);
             const db = getFirestore(app);
-            
+
             // Fix storage bucket name and initialization
             let storage;
             try {
@@ -653,22 +668,22 @@
             } catch (storageError) {
                 console.error('Error with storage:', storageError);
                 // Try alternative storage bucket format
-                const altConfig = {...firebaseConfig, storageBucket: "thompsoncoins-6544f.firebaseapp.com"};
+                const altConfig = { ...firebaseConfig, storageBucket: "thompsoncoins-6544f.firebaseapp.com" };
                 const altApp = initializeApp(altConfig, "altApp");
                 storage = getStorage(altApp);
                 console.log('Using alternative storage configuration');
             }
-            
+
             // Make Firebase instances available globally
             window.firebaseApp = app;
             window.firebaseDb = db;
             window.firebaseStorage = storage;
-            
+
             console.log('Firebase initialized successfully in uploader.html');
         } catch (error) {
             console.error('Error initializing Firebase:', error);
         }
-        
+
         // DOM Elements
         const adminLogin = document.getElementById('admin-login');
         const modeSelection = document.getElementById('mode-selection');
@@ -680,16 +695,16 @@
         const errorOverlay = document.getElementById('errorOverlay');
         const closeErrorPopupBtn = document.getElementById('closeErrorBtn');
         const errorMessage = document.getElementById('errorMessage');
-        
+
         // Mode selection buttons
         const addModeBtn = document.getElementById('add-mode-btn');
         const editModeBtn = document.getElementById('edit-mode-btn');
-        
+
         // Back buttons
         const addBackBtn = document.getElementById('add-back-btn');
         const editBackBtn = document.getElementById('edit-back-btn');
         const editFormBackBtn = document.getElementById('edit-form-back-btn');
-        
+
         // Security check - prevent direct URL access
         function checkAuthorization() {
             // Check if user came from a valid source
@@ -702,25 +717,25 @@
                 location.origin + '/pages/about.html',
                 location.origin + '/pages/contact.html'
             ];
-            
+
             // Check if the authorization is recent (within 5 seconds)
             // This prevents re-entering the URL after being authorized
             const now = Date.now();
             const isRecentAuth = authTimestamp && (now - parseInt(authTimestamp) < 5000);
-            
+
             // Check if user came from a valid page with the keyboard shortcut
-            const hasValidReferrer = validReferrers.some(validRef => 
-                referrer.startsWith(validRef) || 
+            const hasValidReferrer = validReferrers.some(validRef =>
+                referrer.startsWith(validRef) ||
                 referrer.replace('http://', 'https://').startsWith(validRef) ||
                 referrer.replace('https://', 'http://').startsWith(validRef)
             );
-            
+
             // Only allow access if:
             // 1. The user has a valid referrer (came from a main page via shortcut)
             // 2. OR the user has a very recent authorization timestamp (just used the shortcut)
             return hasValidReferrer || (isAuthorized === 'true' && isRecentAuth);
         }
-        
+
         // Apply security check
         if (!checkAuthorization()) {
             // Hide all admin content
@@ -729,51 +744,51 @@
             uploaderContent.style.display = 'none';
             deleteContent.style.display = 'none';
             editContent.style.display = 'none';
-            
+
             // Show unauthorized message
             unauthorizedContainer.style.display = 'block';
-            
+
             // Clear any existing authorization
             sessionStorage.removeItem('adminAuthorized');
             sessionStorage.removeItem('adminAuthTimestamp');
         }
-        
+
         function showErrorPopup(message = 'Incorrect password. Please try again.') {
             errorMessage.textContent = message;
             errorPopup.style.display = 'block';
             errorOverlay.style.display = 'block';
         }
-        
+
         function hideErrorPopup() {
             errorPopup.style.display = 'none';
             errorOverlay.style.display = 'none';
         }
-        
+
         // Close error popup on button click
         closeErrorPopupBtn.addEventListener('click', hideErrorPopup);
-        
+
         // Handle login form submission
-        document.getElementById('admin-login-form').addEventListener('submit', function(e) {
+        document.getElementById('admin-login-form').addEventListener('submit', function (e) {
             e.preventDefault();
-            
+
             const passwordInput = document.getElementById('admin-password');
             const password = passwordInput.value;
-            
+
             // Get current date for password validation
             const now = new Date();
             const dayNames = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
             const dayOfWeek = dayNames[now.getDay()];
             const month = String(now.getMonth() + 1).padStart(2, '0');
             const day = String(now.getDate()).padStart(2, '0');
-            
+
             // Create password in format [DAY][MONTH][DAY] (e.g., "TUE0624")
             const correctPassword = `${dayOfWeek}${month}${day}`;
-            
+
             if (password === correctPassword) {
                 // Mark as authorized in session storage
                 sessionStorage.setItem('adminAuthorized', 'true');
                 sessionStorage.setItem('adminAuthTimestamp', Date.now().toString());
-                
+
                 // Show mode selection instead of directly showing uploader
                 adminLogin.style.display = 'none';
                 modeSelection.style.display = 'block';
@@ -783,43 +798,44 @@
                 passwordInput.focus();
             }
         });
-        
+
         // Handle mode selection
-        addModeBtn.addEventListener('click', function() {
+        addModeBtn.addEventListener('click', function () {
             modeSelection.style.display = 'none';
             uploaderContent.style.display = 'block';
             deleteContent.style.display = 'none';
             editContent.style.display = 'none';
         });
-        
-        editModeBtn.addEventListener('click', function() {
+
+        editModeBtn.addEventListener('click', function () {
             modeSelection.style.display = 'none';
             uploaderContent.style.display = 'none';
             deleteContent.style.display = 'block';
             editContent.style.display = 'none';
-            
+
             // Load coins for editing/deletion
             loadCoinsForDeletion();
         });
-        
+
         // Handle back buttons
-        addBackBtn.addEventListener('click', function() {
+        addBackBtn.addEventListener('click', function () {
             uploaderContent.style.display = 'none';
             modeSelection.style.display = 'block';
         });
-        
-        editBackBtn.addEventListener('click', function() {
+
+        editBackBtn.addEventListener('click', function () {
             deleteContent.style.display = 'none';
             modeSelection.style.display = 'block';
         });
-        
-        editFormBackBtn.addEventListener('click', function() {
+
+        editFormBackBtn.addEventListener('click', function () {
             editContent.style.display = 'none';
             deleteContent.style.display = 'block';
         });
     </script>
-    
+
     <script src="../js/components.js"></script>
     <script type="module" src="../js/uploader.js"></script>
 </body>
-</html> 
+
+</html>

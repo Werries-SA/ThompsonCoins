@@ -1,7 +1,7 @@
 {
   "name": "thompsoncoins",
   "version": "1.0.0",
-  "description": "Thompson Coins website",
+  "description": "Thompson Coins and Stones website",
   "main": "index.html",
   "scripts": {
     "proxy": "node cors-server.js",
@@ -12,4 +12,4 @@
     "express": "^4.18.2",
     "http-proxy-middleware": "^2.0.6"
   }
-} 
+}
