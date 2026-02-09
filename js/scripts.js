@@ -210,7 +210,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                                 <div>${selectedCoin.date}</div>
                             </div>
                         </div>
-                        <a href="pages/contact.html" class="contact-button">Inquire About This Coin</a>
+                        <a href="/contact/" class="contact-button">Inquire About This Coin</a>
                     </div>
                 </div>
             `;
