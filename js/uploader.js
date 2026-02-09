@@ -66,6 +66,49 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Compress image to reduce size for Firestore storage (max 1MB per field)
+    function compressImage(file, maxWidth = 800, quality = 0.7) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    // Calculate new dimensions
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > maxWidth) {
+                        height = (height * maxWidth) / width;
+                        width = maxWidth;
+                    }
+
+                    // Create canvas and draw resized image
+                    const canvas = document.createElement('canvas');
+                    canvas.width = width;
+                    canvas.height = height;
+
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    // Convert to base64 with compression
+                    const base64 = canvas.toDataURL('image/jpeg', quality);
+
+                    // Check size and reduce quality if still too large
+                    if (base64.length > 900000 && quality > 0.3) {
+                        console.log('Image still too large, reducing quality...');
+                        resolve(compressImage(file, maxWidth, quality - 0.1));
+                    } else {
+                        resolve(base64);
+                    }
+                };
+                img.onerror = reject;
+                img.src = e.target.result;
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+    }
+
     // Handle add form submission
     if (uploadForm) {
         uploadForm.addEventListener('submit', async (e) => {
@@ -84,7 +127,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 const weight = parseFloat(document.getElementById('coinWeight').value);
                 const date = document.getElementById('coinDate').value;
                 const description = document.getElementById('coinDescription').value;
-                const imageUrl = coinImageUrlInput.value.trim();
+                let imageUrl = coinImageUrlInput.value.trim();
+
+                // Get file input
+                const fileInput = document.getElementById('coinImageFile');
+                const imageFile = fileInput && fileInput.files[0];
 
                 // Validate form data - only check if image URL is provided when present
                 if (imageUrl) {
@@ -97,6 +144,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Show loading message
                 showStatus('Saving coin...', 'loading', statusMessage);
+
+                // If file is provided, convert to base64
+                if (imageFile) {
+                    try {
+                        console.log('Converting image to base64...');
+                        showStatus('Processing image...', 'loading', statusMessage);
+
+                        // Compress and convert file to base64
+                        imageUrl = await compressImage(imageFile, 800, 0.7);
+
+                        console.log('Image converted to base64 successfully, size:', imageUrl.length);
+                        showStatus('Saving coin...', 'loading', statusMessage);
+                    } catch (convertError) {
+                        console.error('Error converting image:', convertError);
+                        throw new Error('Failed to process image: ' + convertError.message);
+                    }
+                }
 
                 // Create coin data object - only include fields that have values
                 const coinData = {
@@ -248,6 +312,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Format price with space between thousands
     function formatPrice(price) {
+        if (price === undefined || price === null) {
+            return '0.00';
+        }
         return price.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, " ");
     }
 
