@@ -222,6 +222,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Format price with space between thousands
     function formatPrice(price) {
+        if (price === undefined || price === null) {
+            return '0.00';
+        }
         return price.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, " ");
     }
 
