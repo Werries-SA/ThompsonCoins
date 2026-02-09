@@ -70,7 +70,8 @@ nav ul li a {
     border-bottom: 2px solid transparent;
 }
 
-nav ul li a:hover, nav ul li a.active {
+nav ul li a:hover,
+nav ul li a.active {
     color: var(--primary-color);
     border-bottom: 2px solid var(--accent-color);
 }
@@ -200,8 +201,13 @@ main {
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 .coins-error {
@@ -304,8 +310,15 @@ main {
 }
 
 @keyframes modalopen {
-    from {opacity: 0; transform: translateY(-30px);}
-    to {opacity: 1; transform: translateY(0);}
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .close-button {
@@ -567,14 +580,16 @@ footer {
     gap: 2rem;
 }
 
-.contact-info, .contact-form {
+.contact-info,
+.contact-form {
     background-color: #fff;
     border-radius: 8px;
     padding: 2rem;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.contact-info h2, .contact-form h2 {
+.contact-info h2,
+.contact-form h2 {
     color: var(--primary-color);
     margin-bottom: 1.5rem;
 }
@@ -607,7 +622,7 @@ footer {
     font-weight: 500;
 }
 
-.form-group input, 
+.form-group input,
 .form-group textarea {
     width: 100%;
     padding: 0.8rem;
@@ -693,4 +708,117 @@ footer {
     .modal-coin-info {
         flex: 1;
     }
-} 
+}
+
+/* Custom Popup Notification */
+.custom-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.custom-popup-overlay.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.custom-popup {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 2rem;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    transform: translateY(20px);
+    transition: transform 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.custom-popup-overlay.show .custom-popup {
+    transform: translateY(0);
+}
+
+/* Status Colors */
+.custom-popup.success {
+    border-top: 5px solid #4CAF50;
+}
+
+.custom-popup.error {
+    border-top: 5px solid #F44336;
+}
+
+.custom-popup.info {
+    border-top: 5px solid var(--primary-color);
+}
+
+/* Icon Styling */
+.popup-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.success .popup-icon {
+    color: #4CAF50;
+}
+
+.error .popup-icon {
+    color: #F44336;
+}
+
+.info .popup-icon {
+    color: var(--primary-color);
+}
+
+.popup-message {
+    font-size: 1.1rem;
+    color: var(--dark-color);
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+}
+
+.popup-close-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.popup-close-btn:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-2px);
+}
+
+.success .popup-close-btn {
+    background-color: #4CAF50;
+}
+
+.success .popup-close-btn:hover {
+    background-color: #45a049;
+}
+
+.error .popup-close-btn {
+    background-color: #F44336;
+}
+
+.error .popup-close-btn:hover {
+    background-color: #d32f2f;
+}

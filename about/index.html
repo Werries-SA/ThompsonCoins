@@ -4,9 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="referrer" content="no-referrer">
-    <title>Thompson Coins and Stones - Antique Coin Collection</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <title>About Us - Thompson Coins and Stones</title>
+    <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
@@ -14,63 +13,22 @@
     <div id="header-placeholder"></div>
 
     <div class="banner"
-        style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('images/banners/home-banner.jpg');">
+        style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../images/banners/about-banner.jpg');">
         <div class="banner-content">
-            <h2>Discover Rare Numismatic Treasures</h2>
-            <p>Exclusive collection of antique and historical coins from around the world</p>
+            <h2>About Thompson Coins and Stones</h2>
+            <p>Discover our story and numismatic expertise</p>
         </div>
     </div>
 
     <main>
-        <section class="filters">
-            <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Search coins...">
-                <button><i class="fas fa-search"></i></button>
-            </div>
-            <div class="filter-options">
-                <select id="eraFilter">
-                    <option value="">All Eras</option>
-                    <option value="ancient">Ancient</option>
-                    <option value="medieval">Medieval</option>
-                    <option value="colonial">Colonial</option>
-                    <option value="modern">Modern</option>
-                </select>
-                <select id="regionFilter">
-                    <option value="">All Regions</option>
-                    <option value="europe">Europe</option>
-                    <option value="asia">Asia</option>
-                    <option value="africa">Africa</option>
-                    <option value="americas">Americas</option>
-                </select>
-                <button id="resetFilters">Reset Filters</button>
-            </div>
-        </section>
-
-        <section class="coins-container">
-            <!-- Loader animation -->
-            <div class="loader-container">
-                <div class="loader"></div>
-            </div>
-            <!-- Coin cards will be inserted here by JavaScript -->
-        </section>
+        <div class="about-container">
+            <!-- Content sections removed as requested -->
+        </div>
     </main>
 
     <div id="footer-placeholder"></div>
 
-    <!-- Modal for displaying coin details -->
-    <div id="coinModal" class="modal">
-        <div class="modal-content">
-            <span class="close-button">&times;</span>
-            <div id="modalContent" class="modal-body">
-                <!-- Content will be inserted by JavaScript -->
-            </div>
-        </div>
-    </div>
-
-    <!-- Firebase SDK initialized in js/firebaseConfig.js loaded by js/scripts.js -->
-
-    <script src="js/components.js"></script>
-    <script type="module" src="js/scripts.js"></script>
+    <script src="../js/components.js"></script>
 
     <!-- Admin keyboard shortcut script -->
     <script>

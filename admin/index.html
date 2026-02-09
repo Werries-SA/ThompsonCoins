@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
+    <title>Thompson Coins and Stones - Upload Coins</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .uploader-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-title {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.7rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            height: 120px;
+            resize: vertical;
+        }
+
+        .image-preview {
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .image-preview img {
+            max-height: 150px;
+            max-width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 0.5rem;
+        }
+
+        .submit-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 0.8rem 2rem;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .submit-btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .status-message {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .status-success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .status-error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .login-container {
+            max-width: 500px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .login-container h2 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        #admin-login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        #admin-login-form input {
+            padding: 0.7rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        /* Custom error popup styles */
+        .error-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px 30px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            text-align: center;
+            max-width: 90%;
+            width: 350px;
+            display: none;
+            animation: fadeIn 0.3s;
+        }
+
+        .error-popup h3 {
+            color: #d9534f;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .error-popup p {
+            margin-bottom: 20px;
+        }
+
+        .error-popup button {
+            background-color: #d9534f;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.2s;
+        }
+
+        .error-popup button:hover {
+            background-color: #c9302c;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: none;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Mode selection styles */
+        .mode-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        /* Delete coin styles */
+        .coins-list-container {
+            max-height: 500px;
+            overflow-y: auto;
+            margin-bottom: 2rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .coins-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            padding: 1rem;
+        }
+
+        .coin-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .coin-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        .coin-item-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .coin-item-image {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            border-radius: 4px;
+            background-color: white;
+            padding: 0.25rem;
+            border: 1px solid #ddd;
+        }
+
+        .coin-item-details h3 {
+            margin: 0;
+            font-size: 1rem;
+            color: var(--primary-color);
+        }
+
+        .coin-item-details p {
+            margin: 0.25rem 0 0;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .delete-btn {
+            background-color: #d9534f;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .delete-btn:hover {
+            background-color: #c9302c;
+        }
+
+        .loader-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 200px;
+            width: 100%;
+        }
+
+        .loader {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1.5s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Back button styles */
+        .back-button-container {
+            margin-bottom: 1.5rem;
+        }
+
+        .back-btn {
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            border-radius: 4px;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Edit button styles */
+        .edit-btn {
+            background-color: #f0ad4e;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-right: 0.5rem;
+        }
+
+        .edit-btn:hover {
+            background-color: #ec971f;
+        }
+
+        .coin-item-actions {
+            display: flex;
+            align-items: center;
+        }
+
+        /* Unauthorized access styles */
+        .unauthorized-container {
+            max-width: 500px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .unauthorized-container h2 {
+            color: #d9534f;
+            margin-bottom: 1rem;
+        }
+
+        .unauthorized-container p {
+            margin-bottom: 1.5rem;
+        }
+
+        .home-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 0.8rem 2rem;
+            font-size: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: background-color 0.3s ease;
+        }
+
+        .home-btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .file-input {
+            padding: 1rem;
+            background-color: #f9f9f9;
+            border: 2px dashed #ddd;
+            text-align: center;
+        }
+
+        .help-text {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 0.25rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="header-placeholder"></div>
+
+    <div class="banner"
+        style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../images/banners/home-banner.jpg');">
+        <div class="banner-content">
+            <h2>Admin Area</h2>
+            <p>Restricted access</p>
+        </div>
+    </div>
+
+    <main>
+        <!-- Unauthorized access container -->
+        <div id="unauthorized-container" class="unauthorized-container" style="display: none;">
+            <h2><i class="fas fa-exclamation-triangle"></i> Access Denied</h2>
+            <p>You are not authorized to access this page directly.</p>
+            <p>Please use the proper authentication method to access the admin area.</p>
+            <a href="/" class="home-btn">Return to Homepage</a>
+        </div>
+
+        <div id="admin-login" class="login-container">
+            <h2>Administrator Access Required</h2>
+            <p>Please enter the admin password to continue.</p>
+            <form id="admin-login-form">
+                <input type="password" id="admin-password" placeholder="Enter password" required>
+                <button type="submit" class="submit-btn">Login</button>
+            </form>
+        </div>
+
+        <!-- Mode selection container -->
+        <div id="mode-selection" class="login-container" style="display: none;">
+            <h2>Choose Operation</h2>
+            <p>What would you like to do?</p>
+            <div class="mode-buttons">
+                <button id="add-mode-btn" class="submit-btn">Add New Coin</button>
+                <button id="edit-mode-btn" class="submit-btn" style="background-color: #f0ad4e; margin-top: 1rem;">Edit
+                    & Delete Coins</button>
+            </div>
+        </div>
+
+        <div id="uploader-content" class="uploader-container" style="display: none;">
+            <div class="back-button-container">
+                <button id="add-back-btn" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Selection</button>
+            </div>
+            <h2 class="form-title">Upload New Coin</h2>
+
+            <form id="coinUploadForm">
+                <div class="form-group">
+                    <label for="coinName">Coin Name</label>
+                    <input type="text" id="coinName">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="coinPrice">Price (R)</label>
+                        <input type="number" id="coinPrice" step="0.01">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="coinMaterial">Material</label>
+                        <input type="text" id="coinMaterial">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="coinEra">Era</label>
+                        <select id="coinEra">
+                            <option value="">Select Era</option>
+                            <option value="Ancient">Ancient</option>
+                            <option value="Medieval">Medieval</option>
+                            <option value="Colonial">Colonial</option>
+                            <option value="Modern">Modern</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="coinRegion">Region</label>
+                        <select id="coinRegion">
+                            <option value="">Select Region</option>
+                            <option value="Europe">Europe</option>
+                            <option value="Asia">Asia</option>
+                            <option value="Africa">Africa</option>
+                            <option value="Americas">Americas</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="coinDiameter">Diameter (mm)</label>
+                        <input type="number" id="coinDiameter" step="0.001">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="coinWeight">Weight (g)</label>
+                        <input type="number" id="coinWeight" step="0.001">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="coinDate">Date/Period</label>
+                        <input type="text" id="coinDate">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="coinDescription">Description</label>
+                    <textarea id="coinDescription"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="coinImageFile">Coin Image File (Recommended for Mobile)</label>
+                    <input type="file" id="coinImageFile" accept="image/*" class="file-input">
+                    <p class="help-text">Take a photo or upload from gallery</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="coinImageUrl">OR Image URL</label>
+                    <input type="url" id="coinImageUrl" placeholder="https://example.com/image.jpg">
+                    <div class="image-preview" id="imagePreview">
+                        <!-- Image preview will be shown here -->
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">Upload Coin</button>
+            </form>
+
+            <div id="statusMessage" class="status-message" style="display: none;"></div>
+        </div>
+
+        <!-- Delete coins container -->
+        <div id="delete-content" class="uploader-container" style="display: none;">
+            <div class="back-button-container">
+                <button id="edit-back-btn" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Selection</button>
+            </div>
+            <h2 class="form-title">Edit & Delete Coins</h2>
+            <p style="text-align: center; margin-bottom: 2rem;">Select a coin to edit or delete from the database.</p>
+
+            <div class="coins-list-container">
+                <div id="coinsListForDeletion" class="coins-list">
+                    <!-- Coins will be loaded here -->
+                    <div class="loader-container">
+                        <div class="loader"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="deleteStatusMessage" class="status-message" style="display: none;"></div>
+        </div>
+
+        <!-- Edit coin form container -->
+        <div id="edit-content" class="uploader-container" style="display: none;">
+            <div class="back-button-container">
+                <button id="edit-form-back-btn" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Coins
+                    List</button>
+            </div>
+            <h2 class="form-title">Edit Coin</h2>
+
+            <form id="coinEditForm">
+                <input type="hidden" id="editCoinId">
+                <div class="form-group">
+                    <label for="editCoinName">Coin Name</label>
+                    <input type="text" id="editCoinName">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editCoinPrice">Price (R)</label>
+                        <input type="number" id="editCoinPrice" step="0.01">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editCoinMaterial">Material</label>
+                        <input type="text" id="editCoinMaterial">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editCoinEra">Era</label>
+                        <select id="editCoinEra">
+                            <option value="">Select Era</option>
+                            <option value="Ancient">Ancient</option>
+                            <option value="Medieval">Medieval</option>
+                            <option value="Colonial">Colonial</option>
+                            <option value="Modern">Modern</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editCoinRegion">Region</label>
+                        <select id="editCoinRegion">
+                            <option value="">Select Region</option>
+                            <option value="Europe">Europe</option>
+                            <option value="Asia">Asia</option>
+                            <option value="Africa">Africa</option>
+                            <option value="Americas">Americas</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editCoinDiameter">Diameter (mm)</label>
+                        <input type="number" id="editCoinDiameter" step="0.001">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editCoinWeight">Weight (g)</label>
+                        <input type="number" id="editCoinWeight" step="0.001">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editCoinDate">Date/Year</label>
+                        <input type="text" id="editCoinDate">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="editCoinDescription">Description</label>
+                    <textarea id="editCoinDescription"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="editCoinImageFile">New Image File (Optional)</label>
+                    <input type="file" id="editCoinImageFile" accept="image/*" class="file-input">
+                </div>
+
+                <div class="form-group">
+                    <label for="editCoinImageUrl">OR Image URL</label>
+                    <input type="url" id="editCoinImageUrl">
+                </div>
+
+                <div id="editImagePreview" class="image-preview"></div>
+
+                <button type="submit" class="submit-btn">Update Coin</button>
+            </form>
+
+            <div id="editStatusMessage" class="status-message" style="display: none;"></div>
+        </div>
+    </main>
+
+    <!-- Custom error popup -->
+    <div class="overlay" id="errorOverlay"></div>
+    <div class="error-popup" id="errorPopup">
+        <h3>Access Denied</h3>
+        <p id="errorMessage">Incorrect password. Please try again.</p>
+        <button id="closeErrorBtn">OK</button>
+    </div>
+
+    <div id="footer-placeholder"></div>
+
+    <!-- Firebase SDK -->
+    <!-- Firebase SDK initialized in js/firebaseConfig.js loaded by js/uploader.js -->
+    <script type="module">
+        // Import firebase config not strictly needed here as uploader.js handles data,
+        // but removing the initialization block.
+        // The UI logic follows:
+
+        // DOM Elements
+        const adminLogin = document.getElementById('admin-login');
+        const modeSelection = document.getElementById('mode-selection');
+        const uploaderContent = document.getElementById('uploader-content');
+        const deleteContent = document.getElementById('delete-content');
+        const editContent = document.getElementById('edit-content');
+        const unauthorizedContainer = document.getElementById('unauthorized-container');
+        const errorPopup = document.getElementById('errorPopup');
+        const errorOverlay = document.getElementById('errorOverlay');
+        const closeErrorPopupBtn = document.getElementById('closeErrorBtn');
+        const errorMessage = document.getElementById('errorMessage');
+
+        // Mode selection buttons
+        const addModeBtn = document.getElementById('add-mode-btn');
+        const editModeBtn = document.getElementById('edit-mode-btn');
+
+        // Back buttons
+        const addBackBtn = document.getElementById('add-back-btn');
+        const editBackBtn = document.getElementById('edit-back-btn');
+        const editFormBackBtn = document.getElementById('edit-form-back-btn');
+
+        // Security check - prevent direct URL access
+        function checkAuthorization() {
+            // Check if user came from a valid source
+            const referrer = document.referrer;
+            const isAuthorized = sessionStorage.getItem('adminAuthorized');
+            const authTimestamp = sessionStorage.getItem('adminAuthTimestamp');
+            const validReferrers = [
+                location.origin + '/index.html',
+                location.origin + '/',
+                location.origin + '/about/',
+                location.origin + '/contact/'
+            ];
+
+            // Check if the authorization is recent (within 5 seconds)
+            // This prevents re-entering the URL after being authorized
+            const now = Date.now();
+            const isRecentAuth = authTimestamp && (now - parseInt(authTimestamp) < 5000);
+
+            // Check if user came from a valid page with the keyboard shortcut
+            const hasValidReferrer = validReferrers.some(validRef =>
+                referrer.startsWith(validRef) ||
+                referrer.replace('http://', 'https://').startsWith(validRef) ||
+                referrer.replace('https://', 'http://').startsWith(validRef)
+            );
+
+            // Only allow access if:
+            // 1. The user has a valid referrer (came from a main page via shortcut)
+            // 2. OR the user has a very recent authorization timestamp (just used the shortcut)
+            return hasValidReferrer || (isAuthorized === 'true' && isRecentAuth);
+        }
+
+        // Apply security check
+        if (!checkAuthorization()) {
+            // Hide all admin content
+            adminLogin.style.display = 'none';
+            modeSelection.style.display = 'none';
+            uploaderContent.style.display = 'none';
+            deleteContent.style.display = 'none';
+            editContent.style.display = 'none';
+
+            // Show unauthorized message
+            unauthorizedContainer.style.display = 'block';
+
+            // Clear any existing authorization
+            sessionStorage.removeItem('adminAuthorized');
+            sessionStorage.removeItem('adminAuthTimestamp');
+        }
+
+        function showErrorPopup(message = 'Incorrect password. Please try again.') {
+            errorMessage.textContent = message;
+            errorPopup.style.display = 'block';
+            errorOverlay.style.display = 'block';
+        }
+
+        function hideErrorPopup() {
+            errorPopup.style.display = 'none';
+            errorOverlay.style.display = 'none';
+        }
+
+        // Close error popup on button click
+        closeErrorPopupBtn.addEventListener('click', hideErrorPopup);
+
+        // Handle login form submission
+        document.getElementById('admin-login-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const passwordInput = document.getElementById('admin-password');
+            const password = passwordInput.value;
+
+            // Get current date for password validation
+            const now = new Date();
+            const dayNames = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+            const dayOfWeek = dayNames[now.getDay()];
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+
+            // Create password in format [DAY][MONTH][DAY] (e.g., "TUE0624")
+            const correctPassword = `${dayOfWeek}${month}${day}`;
+
+            if (password === correctPassword) {
+                // Mark as authorized in session storage
+                sessionStorage.setItem('adminAuthorized', 'true');
+                sessionStorage.setItem('adminAuthTimestamp', Date.now().toString());
+
+                // Show mode selection instead of directly showing uploader
+                adminLogin.style.display = 'none';
+                modeSelection.style.display = 'block';
+            } else {
+                showErrorPopup();
+                passwordInput.value = '';
+                passwordInput.focus();
+            }
+        });
+
+        // Handle mode selection
+        addModeBtn.addEventListener('click', function () {
+            modeSelection.style.display = 'none';
+            uploaderContent.style.display = 'block';
+            deleteContent.style.display = 'none';
+            editContent.style.display = 'none';
+        });
+
+        editModeBtn.addEventListener('click', function () {
+            modeSelection.style.display = 'none';
+            uploaderContent.style.display = 'none';
+            deleteContent.style.display = 'block';
+            editContent.style.display = 'none';
+
+            // Load coins for editing/deletion
+            loadCoinsForDeletion();
+        });
+
+        // Handle back buttons
+        addBackBtn.addEventListener('click', function () {
+            uploaderContent.style.display = 'none';
+            modeSelection.style.display = 'block';
+        });
+
+        editBackBtn.addEventListener('click', function () {
+            deleteContent.style.display = 'none';
+            modeSelection.style.display = 'block';
+        });
+
+        editFormBackBtn.addEventListener('click', function () {
+            editContent.style.display = 'none';
+            deleteContent.style.display = 'block';
+        });
+    </script>
+
+    <script src="../js/components.js"></script>
+    <script type="module" src="../js/uploader.js"></script>
+</body>
+
+</html>

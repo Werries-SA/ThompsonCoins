@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Thompson Coins and Stones</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
+<body>
+    <div id="header-placeholder"></div>
+
+    <div class="banner"
+        style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../images/banners/contact-banner.jpg');">
+        <div class="banner-content">
+            <h2>Contact Thompson Coins and Stones</h2>
+            <p>We'd love to hear from you</p>
+        </div>
+    </div>
+
+    <main>
+        <div class="contact-container">
+            <div class="contact-form">
+                <h2>Send Us a Message</h2>
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label for="name">Your Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Your Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Your Phone</label>
+                        <input type="tel" id="phone" name="phone">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <input type="text" id="subject" name="subject" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message">Your Message</label>
+                        <textarea id="message" name="message" required></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="../js/components.js"></script>
+    <script>
+        // Formsubmit.co Email Handler (No Config/Auth Required for client-side)
+        document.getElementById('contactForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            // Get form values
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;
+
+            // Start loading state
+            const submitBtn = this.querySelector('.submit-btn');
+            const originalBtnText = submitBtn.textContent;
+            submitBtn.textContent = 'Sending...';
+            submitBtn.disabled = true;
+
+            // Validate fields
+            if (!name || !email || !subject || !message) {
+                showCustomPopup('Please fill in all required fields.', 'error');
+                submitBtn.textContent = originalBtnText;
+                submitBtn.disabled = false;
+                return;
+            }
+
+            // Prepare email content
+            // Formsubmit handles content structure, but we'll pack it nicely into the message field just in case
+            // The JSON structure below uses specific Formsubmit fields
+
+            try {
+                // Using Formsubmit.co for client-side email sending (bypasses CORS issues)
+                const response = await fetch('https://formsubmit.co/ajax/at4179264@gmail.com', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: name,
+                        email: email, // This sets the reply-to automatically
+                        phone: phone,
+                        _subject: `Contact: ${subject}`,
+                        message: `Name: ${name}\nPhone: ${phone}\nEmail: ${email}\n\nMessage:\n${message}`,
+                        _template: 'box' // Optional: improves email look
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showCustomPopup('Thank you for your message! We will get back to you soon.', 'success');
+                    this.reset();
+                } else {
+                    console.error('Error sending email:', data);
+                    console.error('Response status:', response.status);
+                    console.error('Full response:', await response.text());
+                    showCustomPopup(`Sorry, there was an error: ${data.message || 'Please try again or contact us directly.'}`, 'error');
+                }
+            } catch (error) {
+                console.error('Network error:', error);
+                showCustomPopup('Sorry, there was a network error. Please try again later.', 'error');
+            } finally {
+                submitBtn.textContent = originalBtnText;
+                submitBtn.disabled = false;
+            }
+        });
+
+        // Admin keyboard shortcut (Ctrl+Alt+Shift+A+D+M+I+N)
+        const adminKeySequence = ['a', 'd', 'm', 'i', 'n'];
+        let currentSequence = [];
+        let ctrlPressed = false;
+        let altPressed = false;
+        let shiftPressed = false;
+
+        document.addEventListener('keydown', function (e) {
+            // Track modifier keys
+            if (e.key === 'Control') ctrlPressed = true;
+            if (e.key === 'Alt') altPressed = true;
+            if (e.key === 'Shift') shiftPressed = true;
+
+            // Check if all modifier keys are pressed
+            if (ctrlPressed && altPressed && shiftPressed) {
+                // Convert key to lowercase for case-insensitive matching
+                const key = e.key.toLowerCase();
+
+                // Check if the key is part of the sequence
+                if (adminKeySequence.includes(key)) {
+                    currentSequence.push(key);
+
+                    // Check if the sequence is correct so far
+                    for (let i = 0; i < currentSequence.length; i++) {
+                        if (currentSequence[i] !== adminKeySequence[i]) {
+                            // Reset sequence if incorrect
+                            currentSequence = [];
+                            break;
+                        }
+                    }
+
+                    // Check if the complete sequence has been entered
+                    if (currentSequence.length === adminKeySequence.length) {
+                        // Set authorization flag in session storage
+                        sessionStorage.setItem('adminAuthorized', 'true');
+                        sessionStorage.setItem('adminAuthTimestamp', Date.now().toString());
+
+                        // Redirect to uploader page
+                        window.location.href = '/admin/';
+                        currentSequence = []; // Reset sequence
+                    }
+                } else {
+                    // Reset sequence if an incorrect key is pressed
+                    currentSequence = [];
+                }
+            }
+        });
+
+        document.addEventListener('keyup', function (e) {
+            // Reset modifier key states
+            if (e.key === 'Control') ctrlPressed = false;
+            if (e.key === 'Alt') altPressed = false;
+            if (e.key === 'Shift') shiftPressed = false;
+
+            // Reset sequence if any modifier key is released
+            if (e.key === 'Control' || e.key === 'Alt' || e.key === 'Shift') {
+                currentSequence = [];
+            }
+        });
+    </script>
+</body>
+
+</html>

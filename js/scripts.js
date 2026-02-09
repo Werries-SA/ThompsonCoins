@@ -1,5 +1,6 @@
 // Import Firebase functions
 import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+import { db } from "./firebaseConfig.js";
 
 // DOM Elements
 document.addEventListener('DOMContentLoaded', async () => {
@@ -19,11 +20,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
         // Show loader while loading coins
         showLoader();
-        
+
         // Load coins from Firestore
         coinsData = await getCoins();
         console.log("Fetched coins:", coinsData);
-        
+
         // Hide loader and display coins
         hideLoader();
         displayCoins(coinsData);
@@ -38,12 +39,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     function showLoader() {
         loaderContainer.style.display = 'flex';
     }
-    
+
     // Function to hide loader
     function hideLoader() {
         loaderContainer.style.display = 'none';
     }
-    
+
     // Function to show error message
     function showError(message) {
         coinsContainer.innerHTML = `<p class="coins-error">${message}</p>`;
@@ -52,24 +53,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Function to get all coins from Firestore
     async function getCoins() {
         try {
-            const db = window.firebaseDb;
-            if (!db) {
-                console.error("Firestore database not initialized");
-                throw new Error("Database not initialized");
-            }
-            
+            // db is imported from firebaseConfig.js
             console.log("Fetching coins from Firestore...");
             const q = query(collection(db, "coins"), orderBy("name"));
             const querySnapshot = await getDocs(q);
             const coins = [];
-            
+
             querySnapshot.forEach((doc) => {
                 coins.push({
                     id: doc.id,
                     ...doc.data()
                 });
             });
-            
+
             return coins;
         } catch (error) {
             console.error("Error getting coins:", error);
@@ -81,20 +77,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     function displayCoins(coins) {
         // Clear the container but keep the loader hidden
         coinsContainer.innerHTML = '';
-        
+
         if (coins.length === 0) {
             coinsContainer.innerHTML = '<p class="no-results">No coins found matching your criteria. Please try a different search.</p>';
             return;
         }
-        
+
         console.log(`Displaying ${coins.length} coins`);
-        
+
         coins.forEach(coin => {
             console.log("Rendering coin:", coin.name);
             const coinCard = document.createElement('div');
             coinCard.className = 'coin-card';
             coinCard.setAttribute('data-id', coin.id);
-            
+
             coinCard.innerHTML = `
                 <img src="${coin.imageUrl}" alt="${coin.name}" class="coin-image">
                 <div class="coin-info">
@@ -107,7 +103,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </div>
                 </div>
             `;
-            
+
             coinsContainer.appendChild(coinCard);
         });
     }
@@ -116,21 +112,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     function setupEventListeners() {
         // Search functionality
         searchInput.addEventListener('input', filterCoins);
-        
+
         // Filter dropdowns
         eraFilter.addEventListener('change', filterCoins);
         regionFilter.addEventListener('change', filterCoins);
-        
+
         // Reset filters
         resetFiltersBtn.addEventListener('click', resetFilters);
-        
+
         // Modal handling
         coinsContainer.addEventListener('click', openModal);
         closeModalBtn.addEventListener('click', closeModal);
         window.addEventListener('click', (e) => {
             if (e.target === modal) closeModal();
         });
-        
+
         // Close modal with escape key
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') closeModal();
@@ -142,23 +138,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         const searchTerm = searchInput.value.toLowerCase();
         const selectedEra = eraFilter.value.toLowerCase();
         const selectedRegion = regionFilter.value.toLowerCase();
-        
+
         const filteredCoins = coinsData.filter(coin => {
             // Search term matching
-            const matchesSearch = 
+            const matchesSearch =
                 coin.name.toLowerCase().includes(searchTerm) ||
                 coin.description.toLowerCase().includes(searchTerm) ||
                 coin.material.toLowerCase().includes(searchTerm);
-            
+
             // Era filter matching
             const matchesEra = selectedEra === '' || (coin.era && coin.era.toLowerCase() === selectedEra);
-            
+
             // Region filter matching
             const matchesRegion = selectedRegion === '' || (coin.region && coin.region.toLowerCase() === selectedRegion);
-            
+
             return matchesSearch && matchesEra && matchesRegion;
         });
-        
+
         displayCoins(filteredCoins);
     }
 
@@ -174,10 +170,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     function openModal(e) {
         const coinCard = e.target.closest('.coin-card');
         if (!coinCard) return;
-        
+
         const coinId = coinCard.getAttribute('data-id');
         const selectedCoin = coinsData.find(coin => coin.id === coinId);
-        
+
         if (selectedCoin) {
             const modalContent = `
                 <div class="modal-coin-details">
@@ -218,7 +214,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </div>
                 </div>
             `;
-            
+
             document.getElementById('modalContent').innerHTML = modalContent;
             modal.style.display = 'flex';
         }
