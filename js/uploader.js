@@ -49,21 +49,31 @@ document.addEventListener('DOMContentLoaded', () => {
             previewElement.innerHTML = '';
             return;
         }
-
-        // Simple URL validation
-        try {
-            new URL(url);
-            const img = document.createElement('img');
-            img.src = url;
-            img.onerror = () => {
-                img.src = 'https://via.placeholder.com/400x400?text=Image+Error';
-                img.title = 'Could not load image from URL';
-            };
-            previewElement.innerHTML = '';
-            previewElement.appendChild(img);
-        } catch (error) {
-            console.error('Invalid URL:', error);
-        }
+        
+        // Handle array of URLs
+        const urls = Array.isArray(url) ? url : [url];
+        previewElement.innerHTML = '';
+        
+        urls.forEach(u => {
+            if (!u) return;
+            try {
+                // If it's a base64 string without data protocol (rare, but just in case), do not parse
+                if (!u.startsWith('data:') && !u.startsWith('http')) {
+                    new URL(u); // Will throw if invalid
+                }
+                const img = document.createElement('img');
+                img.src = u;
+                img.onerror = () => {
+                    img.src = 'https://via.placeholder.com/400x400?text=Image+Error';
+                    img.title = 'Could not load image from URL';
+                };
+                img.style.margin = '0 5px';
+                img.style.display = 'inline-block';
+                previewElement.appendChild(img);
+            } catch (error) {
+                console.error('Invalid URL:', error);
+            }
+        });
     }
 
     // Compress image to reduce size for Firestore storage (max 1MB per field)
@@ -128,15 +138,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 const date = document.getElementById('coinDate').value;
                 const description = document.getElementById('coinDescription').value;
                 let imageUrl = coinImageUrlInput.value.trim();
+                let imageUrls = imageUrl ? [imageUrl] : [];
 
                 // Get file input
                 const fileInput = document.getElementById('coinImageFile');
-                const imageFile = fileInput && fileInput.files[0];
+                const imageFiles = fileInput && fileInput.files;
 
-                // Validate form data - only check if image URL is provided when present
-                if (imageUrl) {
+                // Validate form data - only check if image URL is provided when present and no local files
+                if (imageUrl && (!imageFiles || imageFiles.length === 0)) {
                     try {
-                        new URL(imageUrl);
+                        if (!imageUrl.startsWith('data:')) new URL(imageUrl);
                     } catch (error) {
                         throw new Error('Please enter a valid image URL');
                     }
@@ -145,19 +156,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Show loading message
                 showStatus('Saving coin...', 'loading', statusMessage);
 
-                // If file is provided, convert to base64
-                if (imageFile) {
+                // If files are provided, convert to base64
+                if (imageFiles && imageFiles.length > 0) {
                     try {
-                        console.log('Converting image to base64...');
-                        showStatus('Processing image...', 'loading', statusMessage);
+                        console.log('Converting image(s) to base64...');
+                        showStatus('Processing images...', 'loading', statusMessage);
 
-                        // Compress and convert file to base64
-                        imageUrl = await compressImage(imageFile, 800, 0.7);
+                        // Compress and convert files to base64
+                        for (let i = 0; i < imageFiles.length; i++) {
+                            const compressedBase64 = await compressImage(imageFiles[i], 800, 0.7);
+                            imageUrls.push(compressedBase64);
+                        }
 
-                        console.log('Image converted to base64 successfully, size:', imageUrl.length);
+                        console.log('Images converted to base64 successfully, count:', imageUrls.length);
                         showStatus('Saving coin...', 'loading', statusMessage);
+                        
+                        if (imageUrls.length > 0) {
+                            imageUrl = imageUrls[0];
+                        }
                     } catch (convertError) {
-                        console.error('Error converting image:', convertError);
+                        console.error('Error converting images:', convertError);
                         throw new Error('Failed to process image: ' + convertError.message);
                     }
                 }
@@ -172,6 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (price) coinData.price = price;
                 if (description) coinData.description = description;
                 if (imageUrl) coinData.imageUrl = imageUrl;
+                if (imageUrls && imageUrls.length > 0) coinData.imageUrls = imageUrls;
                 if (era) coinData.era = era;
                 if (region) coinData.region = region;
                 if (material) coinData.material = material;
@@ -229,21 +248,56 @@ document.addEventListener('DOMContentLoaded', () => {
                 const weight = parseFloat(document.getElementById('editCoinWeight').value);
                 const date = document.getElementById('editCoinDate').value;
                 const description = document.getElementById('editCoinDescription').value;
-                const imageUrl = editCoinImageUrlInput.value.trim();
+                let imageUrl = editCoinImageUrlInput.value.trim();
+                let imageUrls = window.currentEditImageUrls && window.currentEditImageUrls.length > 0 ? [...window.currentEditImageUrls] : [];
 
-                // Validate form data - only check if image URL is provided when present
-                if (imageUrl) {
-                    try {
-                        new URL(imageUrl);
-                    } catch (error) {
-                        throw new Error('Please enter a valid image URL');
-                    }
-                } else {
-                    throw new Error('Please enter an image URL');
+                // If user entered a manual URL and it differs from the first old image, reset
+                if (imageUrl && (!imageUrls.length || imageUrls[0] !== imageUrl)) {
+                    imageUrls = [imageUrl];
+                }
+
+                // Get file input
+                const fileInput = document.getElementById('editCoinImageFile');
+                const imageFiles = fileInput && fileInput.files;
+
+                // Validate form data
+                if (imageUrls.length === 0 && (!imageFiles || imageFiles.length === 0)) {
+                    throw new Error('Please enter an image URL or select files');
                 }
 
                 // Show loading message
                 showStatus('Updating coin...', 'loading', editStatusMessage);
+
+                // If files are provided, convert to base64
+                if (imageFiles && imageFiles.length > 0) {
+                    try {
+                        console.log('Converting image(s) to base64...');
+                        showStatus('Processing images...', 'loading', editStatusMessage);
+                        
+                        // Overwrite existing images with new uploaded images
+                        imageUrls = [];
+                        
+                        for(let i=0; i<imageFiles.length; i++) {
+                            const base64Str = await compressImage(imageFiles[i], 800, 0.7);
+                            imageUrls.push(base64Str);
+                        }
+                        
+                        if (imageUrls.length > 0) {
+                            imageUrl = imageUrls[0];
+                        }
+                        editCoinImageUrlInput.value = imageUrl;
+
+                    } catch (convertError) {
+                        console.error('Error converting image:', convertError);
+                        throw new Error('Failed to process image: ' + convertError.message);
+                    }
+                } else if (imageUrl) {
+                    try {
+                        if (!imageUrl.startsWith('data:')) new URL(imageUrl);
+                    } catch (error) {
+                        throw new Error('Please enter a valid image URL');
+                    }
+                }
 
                 // Create updated coin data object - only include fields that have values
                 const coinData = {
@@ -255,6 +309,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (price) coinData.price = price;
                 if (description) coinData.description = description;
                 if (imageUrl) coinData.imageUrl = imageUrl;
+                if (imageUrls && imageUrls.length > 0) coinData.imageUrls = imageUrls;
                 if (era) coinData.era = era;
                 if (region) coinData.region = region;
                 if (material) coinData.material = material;
@@ -383,7 +438,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     const coinId = e.target.getAttribute('data-id');
                     const coinName = e.target.getAttribute('data-name');
 
-                    if (confirm(`Are you sure you want to delete "${coinName}"? This action cannot be undone.`)) {
+                    const confirmed = await window.showConfirmPopup(`Are you sure you want to delete "${coinName}"? This action cannot be undone.`);
+                    if (confirmed) {
                         await deleteCoin(coinId, coinName);
                     }
                 });
@@ -439,8 +495,11 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('editCoinDescription').value = coin.description;
             document.getElementById('editCoinImageUrl').value = coin.imageUrl;
 
-            // Preview the image
-            previewImage(coin.imageUrl, editImagePreview);
+            // Store imageUrls array for editing logic
+            window.currentEditImageUrls = coin.imageUrls && coin.imageUrls.length > 0 ? coin.imageUrls : (coin.imageUrl ? [coin.imageUrl] : []);
+
+            // Preview the image(s)
+            previewImage(window.currentEditImageUrls, editImagePreview);
 
             // Hide the status message
             deleteStatusMessage.style.display = 'none';

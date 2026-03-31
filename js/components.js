@@ -192,6 +192,62 @@ function closePopup() {
     }
 }
 
+// Custom Confirm Popup Function
+function showConfirmPopup(message) {
+    return new Promise((resolve) => {
+        let confirmOverlay = document.getElementById('custom-confirm-overlay');
+
+        if (!confirmOverlay) {
+            confirmOverlay = document.createElement('div');
+            confirmOverlay.id = 'custom-confirm-overlay';
+            confirmOverlay.className = 'custom-popup-overlay';
+
+            confirmOverlay.innerHTML = `
+                <div class="custom-popup error" id="custom-confirm-popup">
+                    <i class="popup-icon fas fa-exclamation-triangle"></i>
+                    <p class="popup-message" id="confirm-message"></p>
+                    <div style="display: flex; justify-content: space-around; margin-top: 1rem;">
+                        <button class="popup-close-btn" id="confirm-cancel-btn" style="background-color: #6c757d;">Cancel</button>
+                        <button class="popup-close-btn" id="confirm-yes-btn" style="background-color: #d9534f;">Delete</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(confirmOverlay);
+        }
+
+        const msgElement = document.getElementById('confirm-message');
+        const cancelBtn = document.getElementById('confirm-cancel-btn');
+        const yesBtn = document.getElementById('confirm-yes-btn');
+
+        msgElement.textContent = message;
+
+        // Clean up and resolve
+        const handleChoice = (result) => {
+            confirmOverlay.classList.remove('show');
+            setTimeout(() => {
+                confirmOverlay.style.display = 'none';
+            }, 300);
+            cancelBtn.removeEventListener('click', onCancel);
+            yesBtn.removeEventListener('click', onYes);
+            resolve(result);
+        };
+
+        const onCancel = () => handleChoice(false);
+        const onYes = () => handleChoice(true);
+
+        cancelBtn.addEventListener('click', onCancel);
+        yesBtn.addEventListener('click', onYes);
+
+        // Show popup
+        confirmOverlay.style.display = 'flex';
+        // Small delay to allow display change to take effect before opacity transition
+        setTimeout(() => {
+            confirmOverlay.classList.add('show');
+        }, 10);
+    });
+}
+
 // Make functions globally available
 window.showCustomPopup = showCustomPopup;
-window.closePopup = closePopup; 
+window.closePopup = closePopup;
+window.showConfirmPopup = showConfirmPopup; 

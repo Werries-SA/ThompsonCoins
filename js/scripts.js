@@ -91,8 +91,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             coinCard.className = 'coin-card';
             coinCard.setAttribute('data-id', coin.id);
 
+            const images = coin.imageUrls && coin.imageUrls.length > 0 ? coin.imageUrls : (coin.imageUrl ? [coin.imageUrl] : []);
+            
+            let firstImage = images.length > 0 ? images[0] : 'https://via.placeholder.com/400x400?text=No+Image';
+            let imagesHtml = `<img src="${firstImage}" alt="${coin.name}" class="coin-image">`;
+
             coinCard.innerHTML = `
-                <img src="${coin.imageUrl}" alt="${coin.name}" class="coin-image">
+                ${imagesHtml}
                 <div class="coin-info">
                     <h3 class="coin-name">${coin.name}</h3>
                     <p class="coin-price">R${formatPrice(coin.price)}</p>
@@ -175,10 +180,38 @@ document.addEventListener('DOMContentLoaded', async () => {
         const selectedCoin = coinsData.find(coin => coin.id === coinId);
 
         if (selectedCoin) {
+            const images = selectedCoin.imageUrls && selectedCoin.imageUrls.length > 0 ? selectedCoin.imageUrls : (selectedCoin.imageUrl ? [selectedCoin.imageUrl] : []);
+            
+            let mainImage = images.length > 0 ? images[0] : 'https://via.placeholder.com/400x400?text=No+Image';
+            
+            let subImagesHtml = '';
+            if (images.length > 1) {
+                subImagesHtml = `<div class="modal-sub-images-grid" id="modalSubImagesGrid">`;
+                const hasMore = images.length > 3;
+                
+                for (let i = 1; i < images.length; i++) {
+                    if (i === 2 && hasMore) {
+                        const remaining = images.length - 3;
+                        subImagesHtml += `
+                            <div class="more-images-container" onclick="showAllModalImages(this)">
+                                <img src="${images[i]}" alt="${selectedCoin.name} - View ${i+1}" class="modal-sub-image">
+                                <div class="more-images-overlay">+${remaining}</div>
+                            </div>
+                        `;
+                    } else if (i > 2 && hasMore) {
+                        subImagesHtml += `<img src="${images[i]}" alt="${selectedCoin.name} - View ${i+1}" class="modal-sub-image hidden-sub-image" style="display: none;">`;
+                    } else {
+                        subImagesHtml += `<img src="${images[i]}" alt="${selectedCoin.name} - View ${i+1}" class="modal-sub-image">`;
+                    }
+                }
+                subImagesHtml += `</div>`;
+            }
+
             const modalContent = `
                 <div class="modal-coin-details">
                     <div class="modal-coin-image-container">
-                        <img src="${selectedCoin.imageUrl}" alt="${selectedCoin.name}" class="modal-coin-image">
+                        <img src="${mainImage}" alt="${selectedCoin.name}" class="modal-coin-image main">
+                        ${subImagesHtml}
                     </div>
                     <div class="modal-coin-info">
                         <h2>${selectedCoin.name}</h2>
@@ -232,4 +265,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     function closeModal() {
         modal.style.display = 'none';
     }
+
+    // Show hidden images inside modal
+    window.showAllModalImages = function(containerElement) {
+        if (containerElement) {
+            const overlay = containerElement.querySelector('.more-images-overlay');
+            if (overlay) overlay.style.display = 'none';
+            containerElement.style.cursor = 'default';
+        }
+        const grid = document.getElementById('modalSubImagesGrid');
+        if (grid) {
+            const hiddenImages = grid.querySelectorAll('.hidden-sub-image');
+            hiddenImages.forEach(img => {
+                img.style.display = 'block';
+            });
+        }
+    };
 }); 
